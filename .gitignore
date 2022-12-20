@@ -2,6 +2,7 @@
 /.vscode
 /JiHuaShortChainSystemAPI/node_modules
 /JiHuaShortChainSystem/node_modules
+/JiHuaShortChainSystemAPI/DataBase/LInkDataBase.js
 /JiHuaShortChainSystemAPI/.idea
 /JiHuaShortChainSystemAPI/.vscode
 /JiHuaShortChainSystem/.vscode
