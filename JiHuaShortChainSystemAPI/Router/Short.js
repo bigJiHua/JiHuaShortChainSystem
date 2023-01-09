@@ -4,19 +4,16 @@ const expressJoi = require('@escook/express-joi')
 
 const Short = require('../RouterFunction/Short')
 const Short_Rules = require("../Rules/Short")
-const { CheckUserStatus } = require('../Implement/middleware/CheckUserStatus')
+const { CheckUserStatus, DecryptUserData } = require('../Implement/middleware/CheckUserStatus')
 
-router.post('/toShort', expressJoi(Short_Rules.Short), (req, res, next) => {
-    CheckUserStatus(req, res, next)
-}, Short.toShort)
-router.post('/toShorts', expressJoi(Short_Rules.Shorts), (req, res, next) => {
-    CheckUserStatus(req, res, next)
-}, Short.toShorts)
-router.post('/toShortp', expressJoi(Short_Rules.Shortp), (req, res, next) => {
-    CheckUserStatus(req, res, next)
-}, Short.toShortp)
+router.use((req, res, next) => { CheckUserStatus(req, res, next) })
 
-router.get('/Inquire', expressJoi(Short_Rules.InquireShort), (req, res, next) => {
-    CheckUserStatus(req, res, next)
-}, Short.InquireShort)
+router.post('/toShort', expressJoi(Short_Rules.Short), Short.toShort)
+router.post('/toShorts', expressJoi(Short_Rules.Shorts), Short.toShorts)
+// router.post('/toShortp', expressJoi(Short_Rules.Shortp), Short.toShortp)
+router.post('/toShortp', expressJoi(Short_Rules.Shortp), Short.toShortp)
+router.get('/Inquire', expressJoi(Short_Rules.InquireShort), Short.InquireShort)
+router.get('/UserChains', expressJoi(Short_Rules.InquireShort), Short.UserChains)
+router.get('/deleteChain', expressJoi(Short_Rules.DeleteShortChain), Short.DeleteShortChain)
+router.get('/CResLink', expressJoi(Short_Rules.ChangeRestoreLinnk), Short.ChangeRestoreLink)
 module.exports = router

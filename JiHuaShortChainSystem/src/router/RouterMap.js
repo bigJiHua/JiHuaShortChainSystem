@@ -8,6 +8,7 @@ import shortenImmediately from '@/components/ControlPanel/linkShortening/shorten
 import encryptedShortening from '@/components/ControlPanel/linkShortening/encryptedShortening'
 import timeLimitShortened from '@/components/ControlPanel/linkShortening/timeLimitShortened'
 import myShortChain from '@/components/ControlPanel/ShortChainStatistics/myShortChain'
+import expiredLink from '@/components/ControlPanel/ShortChainStatistics/expiredLink'
 import ShortLinkClicks from '@/components/ControlPanel/ShortChainStatistics/ShortLinkClicks'
 import systemSettings from '@/components/ControlPanel/systemSettings/systemSettings'
 
@@ -47,6 +48,10 @@ export default [
         name: 'myShortChain',
         component: myShortChain
       }, {
+        path: 'expiredLink',
+        name: 'expiredLink',
+        component: expiredLink
+      }, {
         path: 'ShortLinkClicks',
         name: 'ShortLinkClicks',
         component: ShortLinkClicks
@@ -56,10 +61,19 @@ export default [
         component: systemSettings
       }
     ]
+  },
+  {
+    name: '404',
+    path: '/404',
+    component: () => import('@/components/Page/notFound.vue')
   }, {
     path: '/:code',
     name: 'Jump',
     component: Jump
+  },
+  {
+    path: '*', // 此处需特别注意至于最底部
+    redirect: '/404'
   }
 
 ]

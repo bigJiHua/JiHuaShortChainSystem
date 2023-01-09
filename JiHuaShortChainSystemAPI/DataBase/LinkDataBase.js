@@ -1,7 +1,7 @@
 const mysql = require('mysql')
 
 const linkDataBase = mysql.createPool({
-    host:'43.129.172.233',
+    host:'127.0.0.1',
     user:'ShortChain',
     password:'ShortChain',
     database:'ShortChain'

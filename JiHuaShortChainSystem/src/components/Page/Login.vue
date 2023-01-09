@@ -3,8 +3,9 @@
     <div class="login_conten_box">
       <img class="login_img" src="https://jihau.top/api/public/uploads/undraw_Login_re_4vu2.png" />
       <div class="user_input_eara">
-        <h2>登录 <small>Login</small></h2>
-        <form class="form-horizontal">
+        <h2 v-if="islogin">登录 <small>Login</small></h2>
+        <h2 v-else>欢迎回来 <small>Come Back</small></h2>
+        <form class="form-horizontal" v-if="islogin">
           <div>
             <label for="username" class="login_lable"> 用户名:</label>
             <input id="username" type="text" v-model="username" class="form-control login_input" placeholder="请输入用户名"
@@ -16,9 +17,12 @@
               v-model="password" @keydown.enter="login" />
           </div>
         </form>
-        <div class="btnmenu">
-          <el-button type="primary" plain @click="register" class="Loginbtn">注册</el-button>
+        <div class="btnmenu" v-if="islogin">
+          <el-button type="primary" plain @click="register" class="Loginbtn" >注册</el-button>
           <el-button type="primary" plain @click="login" class="Loginbtn">登录</el-button>
+        </div>
+        <div class="btnmenu" v-else>
+          <router-link to="/ControlPanel/shortenImmediately"><el-button type="primary" plain class="Loginbtn" >进入</el-button></router-link>
         </div>
       </div>
     </div>
@@ -48,7 +52,8 @@ export default {
           rule: /^\S{6,12}/,
           msg: '密码不能为空!且长度为6-12位'
         }
-      }
+      },
+      islogin: localStorage.getItem('token') === null
     }
   },
   methods: {

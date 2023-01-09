@@ -1,5 +1,5 @@
 const db = require('../DataBase/LinkDataBase')
-const setting = require('../setting')
+const config = require('../config')
 // 获取用户代办
 exports.gettodolist = (req,res) => {
     const user = req.query.user

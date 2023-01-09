@@ -19,7 +19,7 @@ export default {
   props: [],
   data () {
     return {
-      webSiteLink: '',
+      webSiteLink: 'https://gfwcheck.com/asdfghjkhghfdsasawdefgrthyjuklkuyjthrgef',
       loading: false,
       ShortLinks: '',
       isQRC: false,
@@ -34,7 +34,6 @@ export default {
         this.loading = !this.loading
         if (this.passwords()) {
           const data = {
-            username: localStorage.getItem('Username'),
             link: this.webSiteLink,
             password: this.password
           }
@@ -55,7 +54,7 @@ export default {
       if (this.password === '') {
         this.$notify.error({
           title: '错误',
-          message: '有效期不能为空'
+          message: '密码不能为空'
         })
         return false
       } else {
@@ -92,10 +91,29 @@ export default {
   // background-color: #fff;
   margin: 0 auto 15px;
 }
-.inputpwdArea >div:first-child {
+
+@media only screen and (max-width: 755px) {
+  .inputpwdArea {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+
+    /deep/button {
+      width: 80px;
+    }
+
+    /deep/.el-input {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.inputpwdArea>div:first-child {
   flex: 2;
 }
-.inputpwdArea >div:nth-child(2) {
+
+.inputpwdArea>div:nth-child(2) {
   flex: 1;
 }
 
@@ -136,5 +154,4 @@ export default {
     }
   }
 }
-
 </style>

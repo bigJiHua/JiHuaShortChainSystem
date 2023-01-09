@@ -2,12 +2,12 @@
   <div id="ShortArea" class="ShortArea">
     <h1>限时缩短</h1>
     <div class="selectTimeArea">
-      <el-date-picker v-model="time" type="date" placeholder="选择链接有效期" format="yyyy 年 MM 月 dd 日"
-        value-format="timestamp">
-      </el-date-picker>
       <el-input placeholder="请输入内容" v-model="webSiteLink">
         <i slot="prefix" class="el-input__icon el-icon-link"></i>
       </el-input>
+      <el-date-picker v-model="time" type="date" placeholder="选择链接有效期" format="yyyy 年 MM 月 dd 日"
+        value-format="timestamp">
+      </el-date-picker>
       <el-button slot="append" v-if="!loading" icon="el-icon-link" @click="ShortLink"></el-button>
       <el-button slot="append" type="primary" v-else :loading="loading">缩短中</el-button>
     </div>
@@ -21,7 +21,7 @@ export default {
   props: [],
   data () {
     return {
-      webSiteLink: 'http://localhost:8080/ControlPanel/timeLimitShortened',
+      webSiteLink: 'https://gfwcheck.com/asdfghjkhghfdsasawdefgrthyjuklkuyjthrgef',
       loading: false,
       ShortLinks: '',
       isQRC: false,
@@ -36,7 +36,6 @@ export default {
         this.loading = !this.loading
         if (this.times()) {
           const data = {
-            username: localStorage.getItem('Username'),
             link: this.webSiteLink,
             time: this.time
           }
@@ -101,6 +100,21 @@ export default {
   width: 80%;
   // background-color: #fff;
   margin: 0 auto 15px;
+}
+@media only screen and (max-width: 755px) {
+  .selectTimeArea {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    /deep/button {
+      width: 80px;
+    }
+    /deep/.el-input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
 }
 
 .ShortArea>h1 {

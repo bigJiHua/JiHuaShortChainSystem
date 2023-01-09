@@ -30,7 +30,7 @@ export default {
   props: [],
   data () {
     return {
-      webSiteLink: '',
+      webSiteLink: 'https://gfwcheck.com/asdfghjkhghfdsasawdefgrthyjuklkuyjthrgef',
       loading: false,
       Cumuf: JSON.parse(localStorage.getItem('FCdata')).Cumuf,
       ForwT: JSON.parse(localStorage.getItem('FCdata')).ForwT,
@@ -42,13 +42,14 @@ export default {
     if (localStorage.getItem('FCdata') === null) {
       this.Inquire()
     }
+    this.Cumuf = JSON.parse(localStorage.getItem('FCdata')).Cumuf
+    this.ForwT = JSON.parse(localStorage.getItem('FCdata')).ForwT
   },
   methods: {
     async ShortLink () {
       if (this.webSiteLink.length !== 0 && /^https?:\/\/[^\s]+$/.test(this.webSiteLink)) {
         this.loading = !this.loading
         const data = {
-          username: localStorage.getItem('Username'),
           link: this.webSiteLink
         }
         const { data: res } = await toShortAPI.toShort(data)
@@ -65,7 +66,7 @@ export default {
       }
     },
     async Inquire () {
-      const { data: res } = await toShortAPI.Inquire(localStorage.getItem('Username'))
+      const { data: res } = await toShortAPI.Inquire()
       this.ForwT = res.data.ForwT
       this.Cumuf = res.data.Cumuf
       localStorage.setItem('FCdata', JSON.stringify({
@@ -91,8 +92,16 @@ export default {
 
 .ShortInputArea {
   width: 80%;
-  // background-color: #fff;
   margin: 0 auto;
+}
+
+@media only screen and (max-width: 755px) {
+  .ShortInputArea {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+  }
 }
 
 .QRArea {
