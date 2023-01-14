@@ -1,4 +1,5 @@
 const joi = require('joi');
+const {date} = require("joi");
 
 const link = joi.string().max(255).required()
 const time = joi.number().required()

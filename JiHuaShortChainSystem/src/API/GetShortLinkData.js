@@ -18,8 +18,13 @@ const ChangeRestoreLinnk = function (data) {
   }
   return request.get('/data/CResLink?' + params)
 }
+// 获取7天内的所有数据
+const UserPeriod = function () {
+  return request.get('/data/UserPeriod')
+}
 export default {
   getMyChainData,
   deleteChainData,
-  ChangeRestoreLinnk
+  ChangeRestoreLinnk,
+  UserPeriod
 }

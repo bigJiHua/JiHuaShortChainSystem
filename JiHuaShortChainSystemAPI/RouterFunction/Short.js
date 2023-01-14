@@ -11,7 +11,7 @@ exports.InquireShort = async (req, res) => {
     const ForwardShortChainToday = await ExecuteFunctionData(ForwardShortChainTodaySql, req.auth.username)
     const ForwardSLDateMapToday = await ExecuteFunctionData(ForwardSLDateMapTodaySql, req.auth.username)
     const TotalForwarding = await ExecuteFunctionData(TotalForwardingSql, req.auth.username)
-    res.send({
+    res.status(200).send({
         message: false,
         status: 200,
         ismess: false,
@@ -53,6 +53,42 @@ exports.UserChains = async (req, res) => {
             status: 200,
             message: false,
             data: [...GetAllLinksForTheCurrentUserSLDateMapEnd,...GetAllLinksForTheCurrentUserShortChainDelete]
+        })
+    }
+}
+// 查询过往7日数据
+exports.UserPeriod = async (req,res) => {
+    const year = new Date().getFullYear()
+    const month = new Date().getMonth() + 1 >= 10 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1)
+    let day = new Date().getDate() >= 10 ? new Date().getDate() : '0' + new Date().getDay()
+    const QueryDate = `${year}-${month}-${day}`
+    const username = req.auth.username
+    // 获取当日上锁条数
+    const UserPeriodSCSql = `SELECT date as date, COUNT(*) as count FROM ShortChain WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? AND islock = 1 GROUP BY date ORDER BY date DESC`
+    // 获取当日截止日期条数
+    const UserPeriodSLSql = `SELECT date as date, COUNT(*) as count FROM SLDateMap WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? AND endtime IS NOT NULL GROUP BY date ORDER BY date DESC`
+    // 获取当日ShortChain里的所有条数
+    const UserPeriodSCALLSql = `SELECT date as date, COUNT(*) as count FROM ShortChain WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? GROUP BY date ORDER BY date DESC`
+    // 获取当日ShortChain里所有点击数
+    const UserPeriodSCALLClicksSql = `SELECT date as date, SUM(clicks) as clicks_sum FROM ShortChain WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
+    // 获取当日SLDateMap里所有点击数
+    const UserPeriodSLALLClicksSql = `SELECT date as date, SUM(clicks) as clicks_sum FROM SLDateMap WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
+    if (QueryDate) {
+        const UserPeriodSC = await ExecuteFunctionData(UserPeriodSCSql,[QueryDate,QueryDate,username])
+        const UserPeriodSL = await ExecuteFunctionData(UserPeriodSLSql,[QueryDate,QueryDate,username])
+        const UserPeriodSCALL = await ExecuteFunctionData(UserPeriodSCALLSql,[QueryDate,QueryDate,username])
+        const UserPeriodSCALLClicks = await ExecuteFunctionData(UserPeriodSCALLClicksSql,[QueryDate,QueryDate,username])
+        const UserPeriodSLALLClicks = await ExecuteFunctionData(UserPeriodSLALLClicksSql,[QueryDate,QueryDate,username])
+        console.log(UserPeriodSC)
+        console.log(UserPeriodSL)
+        console.log(UserPeriodSCALL)
+        console.log(UserPeriodSCALLClicks)
+        console.log(UserPeriodSLALLClicks)
+        res.status(200).send({
+            message: false,
+            status: 200,
+            ismess: false,
+            data: [UserPeriodSC,UserPeriodSL,UserPeriodSCALL,UserPeriodSCALLClicks,UserPeriodSLALLClicks]
         })
     }
 }

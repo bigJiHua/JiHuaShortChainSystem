@@ -65,6 +65,9 @@ export default {
       }
     }
   },
+  // created () {
+  //   console.log(this.xAxisData)
+  // },
   mounted () {
     this.StackedAreaChart()
     window.onresize = () => {
@@ -75,17 +78,33 @@ export default {
   methods: {
     StackedAreaChart () {
       this.myChart = this.$echarts.init(this.$refs.StackedAreaChart)
+      this.option.title.text = this.title
+      this.option.legend.data = this.legendData
+      this.option.xAxis.data = this.xAxisData
+      this.option.series = this.seriesData
       this.myChart.setOption(this.option)
     }
   },
   watch: {
-    '$route' () {
-      this.StackedAreaChart()
+    seriesData: {
+      handler: function () {
+        this.StackedAreaChart()
+      },
+      deep: true
     },
-    '$data' () {
-      this.StackedAreaChart()
+    title: {
+      handler: function () {
+        this.StackedAreaChart()
+      },
+      deep: true
     },
-    $options: {
+    xAxisData: {
+      handler: function () {
+        this.StackedAreaChart()
+      },
+      deep: true
+    },
+    legendData: {
       handler: function () {
         this.StackedAreaChart()
       },
