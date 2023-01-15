@@ -65,9 +65,6 @@ export default {
       }
     }
   },
-  // created () {
-  //   console.log(this.xAxisData)
-  // },
   mounted () {
     this.StackedAreaChart()
     window.onresize = () => {
@@ -121,7 +118,7 @@ export default {
 <style lang="less" scoped>
 .echarts-box {
   border-radius: 8px;
-  height: 75vh;
+  height: 65vh;
   width: 80vw;
   padding: 20px;
   margin-bottom: 20px;

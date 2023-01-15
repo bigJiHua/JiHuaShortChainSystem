@@ -12,7 +12,7 @@ const deleteChainData = function (data) {
 const ChangeRestoreLinnk = function (data) {
   const params = new URLSearchParams()
   params.append('id', data.id)
-  params.append('endtime', 'changePwd')
+  params.append('endtime', data.endtime)
   if (data.data) {
     params.append('data', DecryptUserData(data.data))
   }

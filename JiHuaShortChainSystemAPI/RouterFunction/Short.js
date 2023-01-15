@@ -64,31 +64,43 @@ exports.UserPeriod = async (req,res) => {
     const QueryDate = `${year}-${month}-${day}`
     const username = req.auth.username
     // 获取当日上锁条数
-    const UserPeriodSCSql = `SELECT date as date, COUNT(*) as count FROM ShortChain WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? AND islock = 1 GROUP BY date ORDER BY date DESC`
+    const UserPeriodSCSql = `SELECT date as date, COUNT(*) as islockCount FROM ShortChain WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? AND islock = 1 GROUP BY date ORDER BY date DESC`
     // 获取当日截止日期条数
-    const UserPeriodSLSql = `SELECT date as date, COUNT(*) as count FROM SLDateMap WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? AND endtime IS NOT NULL GROUP BY date ORDER BY date DESC`
+    const UserPeriodSLSql = `SELECT date as date, COUNT(*) as endtimeCount FROM SLDateMap WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? AND endtime IS NOT NULL GROUP BY date ORDER BY date DESC`
     // 获取当日ShortChain里的所有条数
-    const UserPeriodSCALLSql = `SELECT date as date, COUNT(*) as count FROM ShortChain WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? GROUP BY date ORDER BY date DESC`
+    const UserPeriodSCALLSql = `SELECT date as date, COUNT(*) as SCALLcount FROM ShortChain WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? GROUP BY date ORDER BY date DESC`
+    // 获取当日SLDateMap里的所有条数
+    const UserPeriodSLALLSql = `SELECT date as date, COUNT(*) as SLALLcount FROM SLDateMap WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? GROUP BY date ORDER BY date DESC`
     // 获取当日ShortChain里所有点击数
-    const UserPeriodSCALLClicksSql = `SELECT date as date, SUM(clicks) as clicks_sum FROM ShortChain WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
+    const UserPeriodSCALLClicksSql = `SELECT date as date, SUM(clicks) as SCclicks_sum FROM ShortChain WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
     // 获取当日SLDateMap里所有点击数
-    const UserPeriodSLALLClicksSql = `SELECT date as date, SUM(clicks) as clicks_sum FROM SLDateMap WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
+    const UserPeriodSLALLClicksSql = `SELECT date as date, SUM(clicks) as SLDclicks_sum FROM SLDateMap WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
     if (QueryDate) {
         const UserPeriodSC = await ExecuteFunctionData(UserPeriodSCSql,[QueryDate,QueryDate,username])
         const UserPeriodSL = await ExecuteFunctionData(UserPeriodSLSql,[QueryDate,QueryDate,username])
         const UserPeriodSCALL = await ExecuteFunctionData(UserPeriodSCALLSql,[QueryDate,QueryDate,username])
+        const UserPeriodSLALL = await ExecuteFunctionData(UserPeriodSLALLSql,[QueryDate,QueryDate,username])
         const UserPeriodSCALLClicks = await ExecuteFunctionData(UserPeriodSCALLClicksSql,[QueryDate,QueryDate,username])
         const UserPeriodSLALLClicks = await ExecuteFunctionData(UserPeriodSLALLClicksSql,[QueryDate,QueryDate,username])
-        console.log(UserPeriodSC)
-        console.log(UserPeriodSL)
-        console.log(UserPeriodSCALL)
-        console.log(UserPeriodSCALLClicks)
-        console.log(UserPeriodSLALLClicks)
+        const AllUserData = [[...UserPeriodSC],[...UserPeriodSL],[...UserPeriodSCALL],[...UserPeriodSLALL],[...UserPeriodSCALLClicks],[...UserPeriodSLALLClicks]]
+        const result = AllUserData.reduce((acc, value) => {
+            value.forEach(item => {
+                if (!acc[item.date]) {
+                    acc[item.date] = {date:item.date}
+                }
+                Object.keys(item).forEach(key => {
+                    if (key !== 'date') {
+                        acc[item.date][key] = item[key]
+                    }
+                })
+            })
+            return acc
+        }, {})
+        const sortedData = Object.values(result).sort((a, b) => a.date > b.date)
         res.status(200).send({
-            message: false,
+            message: '获取成功！',
             status: 200,
-            ismess: false,
-            data: [UserPeriodSC,UserPeriodSL,UserPeriodSCALL,UserPeriodSCALLClicks,UserPeriodSLALLClicks]
+            data: sortedData
         })
     }
 }

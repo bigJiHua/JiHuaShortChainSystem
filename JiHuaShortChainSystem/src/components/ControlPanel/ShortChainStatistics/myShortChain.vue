@@ -112,6 +112,7 @@ export default {
       setTimeout(() => {
         this.loading = false
       }, 300)
+      this.DataSelelct(1)
     },
     // 更改截止时间
     async ChangeEndtime (id) {
@@ -136,7 +137,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(async () => {
-          await getMyChainDataAPI.ChangeRestoreLinnk({ id: this.ChangeData.id, data: { password: this.ChangeData.islockpwd, newpassword: this.ChangeData.islocknewpwd } })
+          await getMyChainDataAPI.ChangeRestoreLinnk({ id: this.ChangeData.id, endtime: 'changePwd', data: { password: this.ChangeData.islockpwd, newpassword: this.ChangeData.islocknewpwd } })
           this.getMyChainData(true)
         }).catch(() => {
           this.$message({
