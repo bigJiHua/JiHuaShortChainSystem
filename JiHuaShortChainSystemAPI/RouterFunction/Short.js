@@ -62,6 +62,7 @@ exports.UserPeriod = async (req,res) => {
     const month = new Date().getMonth() + 1 >= 10 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1)
     let day = new Date().getDate() >= 10 ? new Date().getDate() : '0' + new Date().getDay()
     const QueryDate = `${year}-${month}-${day}`
+    const SelectDate = req.query.date
     const username = req.auth.username
     // 获取当日上锁条数
     const UserPeriodSCSql = `SELECT date as date, COUNT(*) as islockCount FROM ShortChain WHERE (date >= DATE_SUB(?, INTERVAL 7 DAY)) AND (date <= ?) AND username = ? AND islock = 1 GROUP BY date ORDER BY date DESC`
@@ -75,7 +76,7 @@ exports.UserPeriod = async (req,res) => {
     const UserPeriodSCALLClicksSql = `SELECT date as date, SUM(clicks) as SCclicks_sum FROM ShortChain WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
     // 获取当日SLDateMap里所有点击数
     const UserPeriodSLALLClicksSql = `SELECT date as date, SUM(clicks) as SLDclicks_sum FROM SLDateMap WHERE date >= DATE_SUB(?, INTERVAL 7 DAY) AND date <= ? AND username = ? GROUP BY date ORDER BY date DESC;`
-    if (QueryDate) {
+    if (!SelectDate) {
         const UserPeriodSC = await ExecuteFunctionData(UserPeriodSCSql,[QueryDate,QueryDate,username])
         const UserPeriodSL = await ExecuteFunctionData(UserPeriodSLSql,[QueryDate,QueryDate,username])
         const UserPeriodSCALL = await ExecuteFunctionData(UserPeriodSCALLSql,[QueryDate,QueryDate,username])
@@ -98,7 +99,34 @@ exports.UserPeriod = async (req,res) => {
         }, {})
         const sortedData = Object.values(result).sort((a, b) => a.date > b.date)
         res.status(200).send({
-            message: '获取成功！',
+            message: sortedData.length > 0 ? '获取成功！' : false,
+            status: 200,
+            data: sortedData
+        })
+    } else {
+        const UserPeriodSC = await ExecuteFunctionData(UserPeriodSCSql,[SelectDate,SelectDate,username])
+        const UserPeriodSL = await ExecuteFunctionData(UserPeriodSLSql,[SelectDate,SelectDate,username])
+        const UserPeriodSCALL = await ExecuteFunctionData(UserPeriodSCALLSql,[SelectDate,SelectDate,username])
+        const UserPeriodSLALL = await ExecuteFunctionData(UserPeriodSLALLSql,[SelectDate,SelectDate,username])
+        const UserPeriodSCALLClicks = await ExecuteFunctionData(UserPeriodSCALLClicksSql,[SelectDate,SelectDate,username])
+        const UserPeriodSLALLClicks = await ExecuteFunctionData(UserPeriodSLALLClicksSql,[SelectDate,SelectDate,username])
+        const AllUserData = [[...UserPeriodSC],[...UserPeriodSL],[...UserPeriodSCALL],[...UserPeriodSLALL],[...UserPeriodSCALLClicks],[...UserPeriodSLALLClicks]]
+        const result = AllUserData.reduce((acc, value) => {
+            value.forEach(item => {
+                if (!acc[item.date]) {
+                    acc[item.date] = {date:item.date}
+                }
+                Object.keys(item).forEach(key => {
+                    if (key !== 'date') {
+                        acc[item.date][key] = item[key]
+                    }
+                })
+            })
+            return acc
+        }, {})
+        const sortedData = Object.values(result).sort((a, b) => a.date > b.date)
+        res.status(200).send({
+            message: sortedData.length > 0 ? '获取成功！' : false,
             status: 200,
             data: sortedData
         })
@@ -113,7 +141,8 @@ exports.toShort = async (req, res) => {
         username: req.auth.username,
         link: LONG_URL,
         short: ShortCode,
-        date: config.pub_date
+        date: config.pub_date,
+        lockpwd: ''
     }
     // 插入数据 insert short chain
     const insertShortChainSql = 'insert into ShortChain set ?'
@@ -204,7 +233,7 @@ exports.ChangeRestoreLink = async (req, res) => {
     const newPwdData = req.body.newpassword
     // 功能1 修改截止时间
     const ModificationDeadlineSql = `UPDATE SLDateMap SET endtime = ? WHERE  username = ? AND id = ?`
-    // 功能2-0 恢复短链正常 restore short chain to normal SLDateMap
+    // 功能2-0 恢复限时短链正常 restore short chain to normal SLDateMap
     const restoreSCTNSql = `UPDATE SLDateMap SET state = 0 WHERE  username = ? AND id = ? AND FROM_UNIXTIME(endtime / 1000) > CURRENT_TIMESTAMP`
     // 功能2-1 恢复短链正常 restore short chain to normal ShortChain
     const restoreSCTNShortChainSql = `UPDATE ShortChain SET state = 0 WHERE  username = ? AND id = ?`

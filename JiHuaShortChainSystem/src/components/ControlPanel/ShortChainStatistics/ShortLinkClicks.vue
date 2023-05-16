@@ -2,18 +2,18 @@
   <div id="" class="ShortLinkEcahrtArea">
     <div class="ShortLinkEcahrtHeader">
       <h1>短链统计</h1>
+      <div>
+        <el-date-picker v-model="selectDate" type="date" placeholder="选择日期">
+        </el-date-picker>
+        <el-button @click="getToday">选择</el-button>
+      </div>
       <el-button type="primary" @click="getToday">刷新数据</el-button>
     </div>
     <EchartsModule v-if="isData" :seriesData="seriesData" :title="''" :xAxisData="xAxisData" :legendData="legendData">
     </EchartsModule>
-    <el-table v-else v-loading="!isData" :data="tableData" style="width: 100%">
-      <el-table-column prop="date" label="日期" width="180">
-      </el-table-column>
-      <el-table-column prop="name" label="姓名" width="180">
-      </el-table-column>
-      <el-table-column prop="address" label="地址">
-      </el-table-column>
-    </el-table>
+    <div v-else class="no-data-panel">
+      <el-empty description="近7日无任何数据"></el-empty>
+    </div>
   </div>
 </template>
 
@@ -33,7 +33,8 @@ export default {
       seriesData: [],
       tableData: [],
       legendData: ['普通缩短', '限时缩短', '加密缩短', '总创建数', '日点击数'],
-      xAxisData: []
+      xAxisData: [],
+      selectDate: ''
     }
   },
   created () {
@@ -49,30 +50,40 @@ export default {
       this.Alllinks = []
       this.clicks = []
       this.seriesData = []
-      const { data: res } = await getMyChainDataAPI.UserPeriod()
+      const newdate = new Date(this.selectDate)
+      const year = newdate.getFullYear()
+      const month = newdate.getMonth() + 1 >= 10 ? newdate.getMonth() + 1 : '0' + (newdate.getMonth() + 1)
+      const day = newdate.getDate() >= 10 ? newdate.getDate() : '0' + newdate.getDay()
+      console.log(newdate)
+      const { data: res } = await getMyChainDataAPI.UserPeriod(`${year}-${month}-${day}`)
       const resData = res.data
-      resData.forEach((Value, index) => {
-        this.xAxisData.push(Value.date)
-        this.short[index] = Value.SCALLcount !== undefined && Value.islockCount !== undefined ? Value.SCALLcount - Value.islockCount : 0
-        this.endtime[index] = Value.endtimeCount !== undefined ? Value.endtimeCount : 0
-        this.islock[index] = Value.islockCount !== undefined ? Value.islockCount : 0
-        this.Alllinks[index] = Value.SCALLcount !== undefined && Value.SLALLcount !== undefined ? Value.SCALLcount + Value.SLALLcount : 0
-        this.clicks[index] = Value.SCclicks_sum !== undefined && Value.SLDclicks_sum !== undefined ? Value.SCclicks_sum + Value.SLDclicks_sum : 0
-      })
-      const EcahrtData = [this.short, this.endtime, this.islock, this.Alllinks, this.clicks]
-      for (let i = 0; i < this.legendData.length; i++) {
-        const data = {
-          name: this.legendData[i],
-          type: 'line',
-          stack: 'Total',
-          data: EcahrtData[i]
+      if (resData.length !== 0) {
+        resData.forEach((Value, index) => {
+          this.xAxisData.push(Value.date)
+          this.short[index] = Value.SCALLcount !== undefined && Value.islockCount !== undefined ? Value.SCALLcount - Value.islockCount : 0
+          this.endtime[index] = Value.endtimeCount !== undefined ? Value.endtimeCount : 0
+          this.islock[index] = Value.islockCount !== undefined ? Value.islockCount : 0
+          this.Alllinks[index] = Value.SCALLcount !== undefined && Value.SLALLcount !== undefined ? Value.SCALLcount + Value.SLALLcount : 0
+          this.clicks[index] = Value.SCclicks_sum !== undefined && Value.SLDclicks_sum !== undefined ? Value.SCclicks_sum + Value.SLDclicks_sum : 0
+        })
+        const EcahrtData = [this.short, this.endtime, this.islock, this.Alllinks, this.clicks]
+        for (let i = 0; i < this.legendData.length; i++) {
+          const data = {
+            name: this.legendData[i],
+            type: 'line',
+            stack: 'Total',
+            data: EcahrtData[i]
+          }
+          this.seriesData.push(data)
         }
-        this.seriesData.push(data)
-      }
-      if (EcahrtData.length !== 0) {
-        this.isData = true
+        if (EcahrtData.length !== 0) {
+          this.isData = true
+        }
+      } else {
+        this.isData = false
       }
     }
+
   },
   watch: {},
   computed: {},
@@ -106,5 +117,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+}
+
+.no-data-panel {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 </style>

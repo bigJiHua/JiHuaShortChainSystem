@@ -30,13 +30,10 @@ function generateMixed(n) {
 // 校验随机短链是否重复
 const CheckShortID = async (id) => {
     //校验是否有相同哈希值 Check if they have the same hash value
-    const CheckIfTheyHaveTheSameHashValueSql = `select * from ShortChain where short=? `
+    const CheckIfTheyHaveTheSameHashValueSql = `SELECT CASE 
+    WHEN EXISTS (SELECT * FROM ShortChain WHERE short IS NOT NULL) OR EXISTS (SELECT * FROM SLDateMap WHERE short IS NOT NULL) THEN true ELSE false END AS short_exists;`
     const CheckIfTheyHaveTheSameHashValue = await ExecuteFunctionData(CheckIfTheyHaveTheSameHashValueSql, id)
-    if (CheckIfTheyHaveTheSameHashValue.length === 0) {
-       return true
-    } else {
-        return false
-    }
+    return CheckIfTheyHaveTheSameHashValue
 }
 const hash = async () => {
     // 对长链接进行哈希

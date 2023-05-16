@@ -18,7 +18,9 @@
     <div class="UserShortDataTable">
       <el-table :data="tableData" border style="width: 100%" :default-sort="{ prop: 'date', order: 'descending' }"
         max-height="600" v-loading="loading">
-        <el-table-column fixed prop="short" label="缩短ID" width="100" align="center">
+        <el-table-column fixed  label="索引" width="80" type="index" :index="indexMethod">
+        </el-table-column>
+        <el-table-column  prop="short" label="缩短ID" width="100" align="center">
         </el-table-column>
         <el-table-column prop="link" label="原链接" width="480" align="center">
         </el-table-column>
@@ -57,8 +59,7 @@
         <div class="ChangePwdArea">
           <p class="TitleCap">加密密码</p>
           <el-input placeholder="请输入原密码" v-model="ChangeData.islockpwd" show-password style="width: 120px"></el-input>
-          <el-input placeholder="请输入新密码" v-model="ChangeData.islocknewpwd" show-password
-            style="width: 120px"></el-input>
+          <el-input placeholder="请输入新密码" v-model="ChangeData.islocknewpwd" show-password style="width: 120px"></el-input>
           <el-button @click="Changepwd()" type="text" size="small">更改</el-button>
         </div>
       </div>
@@ -169,6 +170,7 @@ export default {
         type: 'warning'
       }).then(async () => {
         await getMyChainDataAPI.deleteChainData({ id: id, short: short })
+        this.dialogFormVisible = false
         this.getMyChainData(true)
       }).catch(() => {
         this.$message({

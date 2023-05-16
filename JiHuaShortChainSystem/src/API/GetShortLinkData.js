@@ -19,8 +19,12 @@ const ChangeRestoreLinnk = function (data) {
   return request.get('/data/CResLink?' + params)
 }
 // 获取7天内的所有数据
-const UserPeriod = function () {
-  return request.get('/data/UserPeriod')
+const UserPeriod = function (date) {
+  if (date !== undefined) {
+    return request.get('/data/UserPeriod?date=' + date)
+  } else {
+    return request.get('/data/UserPeriod')
+  }
 }
 export default {
   getMyChainData,

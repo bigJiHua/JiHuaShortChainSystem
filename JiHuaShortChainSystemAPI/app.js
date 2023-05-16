@@ -29,13 +29,13 @@ const Uers_router = require('./Router/Users')
 const jump_router = require('./Router/jump')
 
 
-app.use('/data', expressJWT({
+app.use('/api/data', expressJWT({
     secret: config.jwtSecretKey,
     algorithms: ['HS256'],
     credentialsRequired: true
 }), toShort_router)   // data 获取数据
-app.use('/user', Uers_router) // User 登录 注册
-app.use('/jump', jump_router) // jump 跳转
+app.use('/api/user', Uers_router) // User 登录 注册
+app.use('/api/jump', jump_router) // jump 跳转
 
 // 错误拦截中间件
 app.use((err, res) => {

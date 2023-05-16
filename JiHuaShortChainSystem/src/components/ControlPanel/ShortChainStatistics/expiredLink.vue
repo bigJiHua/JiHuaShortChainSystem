@@ -83,6 +83,7 @@ export default {
       this.ChangeData = JSON.parse(JSON.stringify(rowData))
       this.dialogFormVisible = true
     },
+    // 获取短链
     async getMyChainData (rightNow) {
       if (this.tableData.length === 0 || rightNow === true) {
         this.loading = true
@@ -93,6 +94,7 @@ export default {
         this.loading = false
       }, 300)
     },
+    // 更改截止时间
     async ChangeEndtime (id) {
       if (this.ChangeData.endtime < Date.now()) {
         this.$notify.error({
@@ -110,9 +112,11 @@ export default {
     isrecover (id, isrecover) {
       const CResData = {
         id: id,
-        endtime: ''
+        endtime: '',
+        short: ''
       }
       if (!isrecover) {
+        // 确认删除 非恢复
         CResData.endtime = 'delete'
         this.$confirm('确认删除此短链吗？, 此过程不可逆！', '提示', {
           confirmButtonText: '确定',
@@ -129,26 +133,47 @@ export default {
           })
         })
       } else if (isrecover) {
-        CResData.endtime = 'isrecover'
-        this.$confirm('确认恢复此短链吗？, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(async () => {
-          await getMyChainDataAPI.ChangeRestoreLinnk(CResData)
-          this.dialogFormVisible = false
-          this.getMyChainData(true)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消恢复'
-          })
-        })
-      } else {
-        if (this.ChangeData.endtime < Date.now()) {
-          this.$notify.error({
-            title: '错误',
-            message: '当前链接已失效，请修改截止时间后重试'
+        // 确认恢复
+        if (this.ChangeData.endtime !== undefined) {
+          if (this.ChangeData.endtime < Date.now()) {
+            this.$notify.error({
+              title: '错误',
+              message: '当前链接已失效，请修改截止时间后重试'
+            })
+          } else {
+            CResData.endtime = 'isrecover'
+            CResData.short = this.ChangeData.endtime
+            this.$confirm('确认恢复此短链吗？, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(async () => {
+              await getMyChainDataAPI.ChangeRestoreLinnk(CResData)
+              this.dialogFormVisible = false
+              this.getMyChainData(true)
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消恢复'
+              })
+            })
+          }
+        } else {
+          CResData.endtime = 'isrecover'
+          CResData.short = this.ChangeData.endtime
+          this.$confirm('确认恢复此短链吗？, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(async () => {
+            await getMyChainDataAPI.ChangeRestoreLinnk(CResData)
+            this.dialogFormVisible = false
+            this.getMyChainData(true)
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消恢复'
+            })
           })
         }
       }

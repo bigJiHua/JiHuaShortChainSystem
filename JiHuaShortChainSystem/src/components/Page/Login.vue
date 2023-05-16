@@ -39,8 +39,8 @@ import PostLogin from '@/API/Login'
 export default {
   data () {
     return {
-      username: '',
-      password: '',
+      username: '4564aa',
+      password: '123456',
       msg: '正在登录',
       setTime: 500,
       rules: {
