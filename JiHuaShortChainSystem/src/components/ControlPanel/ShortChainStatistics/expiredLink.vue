@@ -1,13 +1,18 @@
 <template>
   <div id="" class="myShortChain">
+    <!-- Title -->
     <div class="TitleBtn">
       <h1>失效短链</h1>
       <el-button type="primary" @click="getMyChainData(true)">刷新数据</el-button>
     </div>
+    <!-- 展示区域 -->
     <div class="UserShortDataTable">
       <el-table :data="tableData" border style="width: 100%" :default-sort="{ prop: 'date', order: 'descending' }"
         max-height="600" v-loading="loading">
         <el-table-column fixed prop="short" label="缩短ID" width="100" align="center">
+          <template slot-scope="scope">
+            <a :href="'/' + scope.row.short">{{ scope.row.short }}</a>
+          </template>
         </el-table-column>
         <el-table-column prop="link" label="原链接" width="480" align="center">
         </el-table-column>
@@ -25,6 +30,7 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 编辑框 -->
     <el-dialog :title="'正在编辑 ' + ChangeData.short" :visible.sync="dialogFormVisible" width="75%">
       <div class="demo-input-suffix">
         <span class="TitleCap">短链ID</span>
@@ -109,6 +115,7 @@ export default {
         this.getMyChainData(true)
       }
     },
+    // 是否恢复
     isrecover (id, isrecover) {
       const CResData = {
         id: id,
@@ -182,6 +189,7 @@ export default {
   watch: {
   },
   computed: {
+    // 判断链接状态
     linkstate () {
       return value => {
         if (Number(value.state) === 2) {
@@ -191,6 +199,7 @@ export default {
         }
       }
     },
+    // 判断链接截止时间
     endtime () {
       return value => {
         if (value.endtime === undefined && Number(value.islock) === 0) {

@@ -19,7 +19,7 @@ export default {
   props: [],
   data () {
     return {
-      webSiteLink: 'https://gfwcheck.com/asdfghjkhghfdsasawdefgrthyjuklkuyjthrgef',
+      webSiteLink: 'https://msdn.itellyou.cn/',
       loading: false,
       ShortLinks: '',
       isQRC: false,
@@ -51,16 +51,19 @@ export default {
       }
     },
     passwords () {
+      const passwordRegex = /^[a-zA-Z0-9`~!@#$%^&*()_+={}[\]|\\;:'",<.>/?]{1,25}$/
       if (this.password === '') {
         this.$notify.error({
           title: '错误',
-          message: '密码不能为空'
+          message: '密码不能为空且不能超过25字'
         })
         return false
-      } else {
-        return true
+      } else if (!passwordRegex.test(this.password)) {
+        return false
       }
+      return true
     }
+
   },
   watch: {
     time: {

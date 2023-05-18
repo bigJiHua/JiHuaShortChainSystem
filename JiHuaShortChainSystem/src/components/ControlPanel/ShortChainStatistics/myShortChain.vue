@@ -1,9 +1,11 @@
 <template>
   <div id="" class="myShortChain">
+    <!-- Title -->
+    <div class="TitleBtn">
+      <h1>我的短链</h1>
+      <el-button type="primary" @click="getMyChainData(true)">刷新数据</el-button>
+    </div>
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="DataSelelct">
-      <el-menu-item index="4">
-        <h1>我的短链</h1>
-      </el-menu-item>
       <el-menu-item index="1">非加密链接</el-menu-item>
       <el-menu-item index="2">加密链接</el-menu-item>
       <el-menu-item index="3">限时链接</el-menu-item>
@@ -11,18 +13,16 @@
         <el-input v-model="keyValue" placeholder="快捷搜索" maxlength="50" clearable suffix-icon="el-icon-search"
           @change="search(keyValue)"></el-input>
       </el-menu-item>
-      <el-menu-item index="1">
-        <el-button type="primary" @click="getMyChainData(true)">刷新数据</el-button>
-      </el-menu-item>
     </el-menu>
     <div class="UserShortDataTable">
       <el-table :data="tableData" border style="width: 100%" :default-sort="{ prop: 'date', order: 'descending' }"
         max-height="600" v-loading="loading">
-        <el-table-column fixed  label="索引" width="80" type="index" :index="indexMethod">
-        </el-table-column>
         <el-table-column  prop="short" label="缩短ID" width="100" align="center">
+          <template slot-scope="scope">
+            <a :href="'/' + scope.row.short">{{ scope.row.short }}</a>
+          </template>
         </el-table-column>
-        <el-table-column prop="link" label="原链接" width="480" align="center">
+        <el-table-column prop="link" label="原链接" width="600" align="center">
         </el-table-column>
         <el-table-column prop="islock" label="是否加密" :formatter="islimittime" width="80" align="center">
         </el-table-column>

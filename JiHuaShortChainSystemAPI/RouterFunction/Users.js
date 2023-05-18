@@ -13,7 +13,7 @@ exports.user_login_API = (req, res) => {
         if (results.length !== 1) return res.cc('登录失败 账号不存在或已经被注销！',404)
         const compareResult = bcrypt.compareSync(userinfo.password, results[0].password)
         if(!compareResult) return res.cc('登录失败 密码错误 !',401)
-        const user = { ...results[0], password: ''}
+        const user = {email: results[0].email,username: results[0].username}
         const tokenStr = jwt.sign(user, config.jwtSecretKey, { expiresIn: config.expiresIn })
         res.send({
             status: 200,

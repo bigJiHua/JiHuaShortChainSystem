@@ -26,9 +26,13 @@ const UserPeriod = function (date) {
     return request.get('/data/UserPeriod')
   }
 }
+const jump = function (short) {
+  return request.get('/jump/?id=' + short)
+}
 export default {
   getMyChainData,
   deleteChainData,
   ChangeRestoreLinnk,
-  UserPeriod
+  UserPeriod,
+  jump
 }

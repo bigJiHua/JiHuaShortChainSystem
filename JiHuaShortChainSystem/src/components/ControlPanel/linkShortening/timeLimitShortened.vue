@@ -21,7 +21,7 @@ export default {
   props: [],
   data () {
     return {
-      webSiteLink: 'https://gfwcheck.com/asdfghjkhghfdsasawdefgrthyjuklkuyjthrgef',
+      webSiteLink: 'https://msdn.itellyou.cn/',
       loading: false,
       ShortLinks: '',
       isQRC: false,

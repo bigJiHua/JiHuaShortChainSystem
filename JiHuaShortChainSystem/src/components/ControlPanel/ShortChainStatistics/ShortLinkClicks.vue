@@ -5,9 +5,9 @@
       <div>
         <el-date-picker v-model="selectDate" type="date" placeholder="选择日期">
         </el-date-picker>
-        <el-button @click="getToday">选择</el-button>
+        <el-button @click="getToday" :disabled="isBtnDisabled">选择</el-button>
       </div>
-      <el-button type="primary" @click="getToday">刷新数据</el-button>
+      <el-button type="primary" @click="getToday" :disabled="isBtnDisabled">刷新数据</el-button>
     </div>
     <EchartsModule v-if="isData" :seriesData="seriesData" :title="''" :xAxisData="xAxisData" :legendData="legendData">
     </EchartsModule>
@@ -34,7 +34,8 @@ export default {
       tableData: [],
       legendData: ['普通缩短', '限时缩短', '加密缩短', '总创建数', '日点击数'],
       xAxisData: [],
-      selectDate: ''
+      selectDate: '',
+      isBtnDisabled: false
     }
   },
   created () {
@@ -43,6 +44,8 @@ export default {
   methods: {
     // 获取过往7日数据
     async getToday () {
+      if (this.isBtnDisabled) return // 如果正在加载数据，则直接返回
+      this.isBtnDisabled = true // 设置loading状态
       this.xAxisData = []
       this.short = []
       this.endtime = []
@@ -50,11 +53,10 @@ export default {
       this.Alllinks = []
       this.clicks = []
       this.seriesData = []
-      const newdate = new Date(this.selectDate)
+      const newdate = this.selectDate === '' ? new Date() : new Date(this.selectDate)
       const year = newdate.getFullYear()
       const month = newdate.getMonth() + 1 >= 10 ? newdate.getMonth() + 1 : '0' + (newdate.getMonth() + 1)
       const day = newdate.getDate() >= 10 ? newdate.getDate() : '0' + newdate.getDay()
-      console.log(newdate)
       const { data: res } = await getMyChainDataAPI.UserPeriod(`${year}-${month}-${day}`)
       const resData = res.data
       if (resData.length !== 0) {
@@ -82,6 +84,7 @@ export default {
       } else {
         this.isData = false
       }
+      this.isBtnDisabled = false
     }
 
   },
@@ -113,7 +116,7 @@ export default {
   display: flex;
   width: 100%;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
