@@ -23,4 +23,8 @@ export default {
   height: 100vh;
   overflow: hidden;
 }
+a {
+  color: rgba(27, 105, 207, 0.8);
+  text-decoration: none;
+}
 </style>

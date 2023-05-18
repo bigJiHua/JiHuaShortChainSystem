@@ -21,9 +21,16 @@ const toShortp = function (data) {
     data: DecryptUserData(data)
   })
 }
+// 解密短链
+const todecrypt = function (data) {
+  return request.post('/jump/dec', {
+    data: DecryptUserData(data)
+  })
+}
 export default {
   toShort,
   Inquire,
   toShorts,
-  toShortp
+  toShortp,
+  todecrypt
 }

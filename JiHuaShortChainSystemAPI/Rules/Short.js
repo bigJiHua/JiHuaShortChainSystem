@@ -3,7 +3,7 @@ const {date} = require("joi");
 
 const link = joi.string().max(255).required()
 const time = joi.number().required()
-const password = joi.string().required()
+const password = joi.string().min(1).max(25).required()
 const id = joi.string().required()
 const short = joi.string().required()
 const end = joi.boolean()

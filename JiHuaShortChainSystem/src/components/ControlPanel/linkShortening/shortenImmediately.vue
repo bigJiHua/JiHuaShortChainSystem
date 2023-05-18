@@ -30,7 +30,7 @@ export default {
   props: [],
   data () {
     return {
-      webSiteLink: 'https://gfwcheck.com/asdfghjkhghfdsasawdefgrthyjuklkuyjthrgef',
+      webSiteLink: 'https://msdn.itellyou.cn/',
       loading: false,
       Cumuf: JSON.parse(localStorage.getItem('FCdata')).Cumuf,
       ForwT: JSON.parse(localStorage.getItem('FCdata')).ForwT,

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import RouterMap from './RouterMap'
+import { Notification } from 'element-ui'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,10 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next('Login')
+      Notification.error({
+        title: '错误',
+        message: '请登录！'
+      })
     }
   } else {
     next()
