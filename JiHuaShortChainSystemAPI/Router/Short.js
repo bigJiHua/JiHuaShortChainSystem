@@ -17,4 +17,7 @@ router.get('/UserChains', expressJoi(Short_Rules.InquireShort), Short.UserChains
 router.get('/UserPeriod',Short.UserPeriod) // 查询过往7天数据
 router.get('/deleteChain', expressJoi(Short_Rules.DeleteShortChain), Short.DeleteShortChain)　//　浅删除API　state　＝　1
 router.get('/CResLink', expressJoi(Short_Rules.ChangeRestoreLinnk), Short.ChangeRestoreLink) // 恢复、更改有效期、彻底删除API
+
+// 设置接口
+// TODO 暂未开放
 module.exports = router

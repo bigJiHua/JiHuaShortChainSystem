@@ -40,21 +40,7 @@
 
 <script>
 export default {
-  props: [],
-  data () {
-    return {
-    }
-  },
-  created () {
-  },
-  method () { },
-  methods: {
-  },
-  watch: {},
-  computed: {},
-  filters: {},
-  name: 'IndexM',
-  components: {}
+  name: 'IndexM'
 }
 </script>
 

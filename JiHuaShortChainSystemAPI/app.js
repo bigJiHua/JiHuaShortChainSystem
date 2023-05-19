@@ -33,9 +33,9 @@ app.use('/api/data', expressJWT({
     secret: config.jwtSecretKey,
     algorithms: ['HS256'],
     credentialsRequired: true
-}), toShort_router)   // data 获取数据
-app.use('/api/user', Uers_router) // User 登录 注册
-app.use('/api/jump', jump_router) // jump 跳转
+}), toShort_router)   // data 获取数据 需要验权
+app.use('/api/user', Uers_router) // User 登录 注册 不需要验权
+app.use('/api/jump', jump_router) // jump 跳转 不需要验权
 
 // 错误拦截中间件
 app.use((err, res) => {
@@ -55,5 +55,5 @@ app.use((err, res) => {
 
 // 监听项目端口，运行时要修改
 app.listen(config.Port, () => {
-    console.log('server Open ' + config.pub_date + ' ' + new Date())
+    console.log('server Open ' + config.pub_date )
 })
