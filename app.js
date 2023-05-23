@@ -40,7 +40,7 @@ function parseHTML(html) {
     const $ = cheerio.load(html);
     // 在这里进行进一步的解析和提取操作
     // 例如，你可以使用类似于jQuery的选择器来选择特定的元素
-    const content = $('body')
+    const content = $('html')
         .children() // 获取 body 元素的子元素
         .not('a, img') // 过滤掉所有的 a 标签和 img 标签
         .text(); // 提取剩余内容的文本
@@ -82,7 +82,7 @@ app.get('/?', async (req, res) => {
     const text = await fetchWebPage(req.query.url)
     const filteredKeywords = filteredKeyword(text)
     // 如果关键词超过3个及以上
-    if (filteredKeywords.length >= 3) {
+    if (filteredKeywords.length >= 5) {
         res.status(200).send('不良网站');
     } else {
         res.status(200).send('网站安全');
