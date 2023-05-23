@@ -26,5 +26,3 @@ exports.DecryptUserData = (req) => {
         req.body = JSON.parse(decryptedString)
     }
 }
-
-

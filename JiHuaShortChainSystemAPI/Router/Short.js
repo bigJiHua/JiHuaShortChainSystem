@@ -6,8 +6,9 @@ const Short_Rules = require("../Rules/Short")
 
 //　用户state中间件
 const { CheckUserStatus } = require('../Implement/middleware/CheckUserStatus')
+const { AutoCheckSLFunctionModule } = require('../Implement/middleware/CheckUserSL')
 router.use((req, res, next) => { CheckUserStatus(req, res, next) })
-
+router.use((req, res, next) => { AutoCheckSLFunctionModule(req, res,next)})
 //　API－router
 router.post('/toShort', expressJoi(Short_Rules.Short), Short.toShort) // 普通缩短API
 router.post('/toShorts', expressJoi(Short_Rules.Shorts), Short.toShorts) // 限时缩短API

@@ -47,16 +47,19 @@ export default {
   },
   methods: {
     async ShortLink () {
+      this.isQRC = false
       if (this.webSiteLink.length !== 0 && /^https?:\/\/[^\s]+$/.test(this.webSiteLink)) {
-        this.loading = !this.loading
+        this.loading = true
         const data = {
           link: this.webSiteLink
         }
         const { data: res } = await toShortAPI.toShort(data)
-        this.ShortLinks = res.data
-        this.isQRC = true
-        this.loading = !this.loading
-        this.Inquire()
+        if (res.data) {
+          this.ShortLinks = res.data
+          this.isQRC = true
+          this.Inquire()
+        }
+        this.loading = false
       } else {
         this.$notify.error({
           title: '转址失败',

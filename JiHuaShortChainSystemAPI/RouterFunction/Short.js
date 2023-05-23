@@ -56,7 +56,7 @@ exports.UserChains = async (req, res) => {
         })
     }
 }
-// 查询过往7日数据
+// 查询过往7日数据 ⚠重量级屎山，勿动
 exports.UserPeriod = async (req,res) => {
     const year = new Date().getFullYear()
     const month = new Date().getMonth() + 1 >= 10 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1)

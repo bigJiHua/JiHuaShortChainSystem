@@ -28,6 +28,7 @@
     </div>
     <p class="tip">
       <span>⚠ 本短链系统并不提供给大众使用</span><br>
+      <span>⚠ 本站点仅供演示项目使用，非正式网站，如有发现大量非内测用户使用，立即关停</span><br>
       <span>如有疑问请 <a href="https://jihau.com/%e6%84%8f%e8%a7%81%e5%8f%8d%e9%a6%88">联系站长</a></span>
     </p>
   </div>
@@ -148,6 +149,9 @@ export default {
   bottom: 20px;
   text-align: center;
   width: 100vw;
+  > span {
+    color: red;
+  }
 }
 @media only screen and (min-width: 755px) {
   .login_conten_box {

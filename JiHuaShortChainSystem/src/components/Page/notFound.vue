@@ -17,7 +17,7 @@ export default {
     setInterval(() => {
       this.countdown--
       if (this.countdown === 0) {
-        this.$router.push('/Login')
+        this.$router.push('/')
       }
     }, 1000)
   },

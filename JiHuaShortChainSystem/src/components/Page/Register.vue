@@ -41,11 +41,11 @@ export default {
   data () {
     return {
       loading: false,
-      elsepassword: '123456i78',
+      elsepassword: '',
       newUser: {
-        username: '4564aa',
-        password: '123456i78',
-        email: '1959097664@qq.com'
+        username: '',
+        password: '',
+        email: ''
       },
       rules: {
         username: {

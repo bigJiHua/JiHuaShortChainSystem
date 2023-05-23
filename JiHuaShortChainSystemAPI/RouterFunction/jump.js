@@ -8,8 +8,8 @@ exports.toJumpRouter = async (req,res) => {
     const CalibrationTimeSql = `SELECT * FROM SLDateMap WHERE FROM_UNIXTIME(endtime / 1000) > CURRENT_TIMESTAMP AND short = ?`
     const updateClickSql = `UPDATE ShortChain SET clicks = clicks + 1 WHERE short = ?`;
     // 功能1 查表，看短链属性 Look at the short chain properties
-    const shortChainPropertiesSCSql = `SELECT * FROM ShortChain WHERE short = ?`
-    const shortChainPropertiesSLDSql = `SELECT * FROM SLDateMap WHERE short = ?`
+    const shortChainPropertiesSCSql = `SELECT * FROM ShortChain WHERE short = ? AND isSafety = 0`
+    const shortChainPropertiesSLDSql = `SELECT * FROM SLDateMap WHERE short = ? AND isSafety = 0`
     const shortChainPropertiesSC =  await ExecuteFunctionData(shortChainPropertiesSCSql,ShortID)
     const shortChainPropertiesSLD = await ExecuteFunctionData(shortChainPropertiesSLDSql,ShortID)
     // 如果是普通缩短
@@ -57,7 +57,7 @@ exports.toJumpRouter = async (req,res) => {
 exports.todecRouter = async (req,res) => {
     const data = {...req.body}
     const updateClickSql = `UPDATE ShortChain SET clicks = clicks + 1 WHERE short = ?`;
-    const selectShortChainSql = `select * from ShortChain where short = ? And islock = 1`
+    const selectShortChainSql = `select * from ShortChain where short = ? And islock = 1 AND isSafety = 0`
     // 根据short短链查找该短链信息
     const selectShortChain = await ExecuteFunctionData(selectShortChainSql,data.short)
     // console.log(selectShortChain)
