@@ -1,6 +1,6 @@
 // 全局配置文件
 // URL 使用时需要修改这里
-const URL = 'http://t.jihau.top/'
+const URL = 'http://127.0.0.1'
 // API端口 使用时需要修改这里
 const Port = 80
 // 配置一个token加密密钥

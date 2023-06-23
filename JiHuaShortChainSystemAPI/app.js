@@ -38,20 +38,18 @@ app.use('/api/user', Uers_router) // User 登录 注册 不需要验权
 app.use('/api/jump', jump_router) // jump 跳转 不需要验权
 
 // 错误拦截中间件
-app.use((err, res) => {
+app.use((err, req, res, next) => {
     if (err instanceof Joi.ValidationError) return res.status(206).send({
         status: 206,
         message: err instanceof Error ? err.message : err,
     })
     if (err.name === 'UnauthorizedError') return res.status(401).send({
         status: 401,
-        message: '身份认证失败,请登录'
+        message: '身份认证失败，请登录'
     })
-    return res.status(206).send({
-        status: 206,
-        message: err
-    })
+    console.log(err)
 })
+
 
 // 监听项目端口，运行时要修改
 app.listen(config.Port, () => {

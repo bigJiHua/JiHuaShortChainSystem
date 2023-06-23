@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   routes: RouterMap,
-  mode: 'history'
+  mode: 'history' // history
 })
 
 router.beforeEach((to, from, next) => {

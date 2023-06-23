@@ -14,9 +14,11 @@ async function fetchWebPage(url) {
             'Referer': 'https://www.baidu.com/', // 设置引用页为百度
         };
         const response = await axios.get(url, { headers });
-        const html = response.data; // 获取网页内容
+        // 获取网页内容
+        const html = response.data
         // 调用函数并传入要解析的HTML内容
         const htmlData = parseHTML(html);
+        // console.log(html)
         // 筛选中文
         const chineseRegex = /[\u4e00-\u9fa5]/g;
         const matches = htmlData.match(chineseRegex);
@@ -25,9 +27,12 @@ async function fetchWebPage(url) {
             return matches.join("");
         } else {
             console.log("网站请求失败||获取网站内容为空")
+            return []
         }
     } catch (error) {
-        console.log('请求失败-错误');
+        console.log('网站检测请求失败/错误')
+        // console.log(error)
+        return []
     }
 }
 // 分析链接获取body里面的所有内容
@@ -39,6 +44,7 @@ function parseHTML(html) {
         .children() // 获取 body 元素的子元素
         .not('a, img') // 过滤掉所有的 a 标签和 img 标签
         .text(); // 提取剩余内容的文本
+    console.log(content !== '')
     return content
 }
 // 遍历关键词
@@ -69,9 +75,9 @@ function filteredKeyword(text) {
 }
 // 自动检测短链程序模块
 exports.AutoCheckSLFunctionModule = async (req,res,next) => {
-    console.log(req.body.link)
-    const text = await fetchWebPage(req.body.link)
-    const filteredKeywords = filteredKeyword(text)
+    const WebsiteLink = await fetchWebPage(req.body.link)
+    // 请求该WebsiteLink站点
+    const filteredKeywords = filteredKeyword(WebsiteLink)
     // 如果关键词超过5个及以上
     if (filteredKeywords.length < 5) {
         next()
