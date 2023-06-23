@@ -3,7 +3,7 @@ import { app } from '@/main'
 import { Notification } from 'element-ui'
 
 const request = axios.create({
-  baseURL: 'http://dl.jihau.top/api'
+  baseURL: 'https://dl.jihau.top/api'
 })
 request.interceptors.request.use((config) => {
   // 在发送请求之前做些什么
