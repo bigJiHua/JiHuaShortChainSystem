@@ -1,11 +1,11 @@
 <template>
   <div id="" class="HeaderM">
     <div class="LeftHeader">
-      <img src="https://jihau.top/img/logo.png" alt="Logo" width="40px" height="30px">
-      <h1>
-        <router-link to="/ControlPanel/shortenImmediately" class="default_a_black">JiHua的短链服务系统
-        </router-link>
-      </h1>
+      <img src="https://jihau.top/img/logo.png" alt="Logo" width="35px" height="28px">
+      <router-link to="/ControlPanel/shortenImmediately" class="default_a_black">
+        <h1 class="title">JiHua的短链服务系统
+        </h1>
+      </router-link>
     </div>
     <div class="RightHeader" v-if="!phone">
       <el-button type="primary" @click="LoginOut">退出登录</el-button>
@@ -52,7 +52,6 @@
       </el-drawer>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -117,5 +116,8 @@ export default {
 
 /deep/.el-drawer.ltr {
   width: 40% !important;
+}
+.title {
+  font-size: 1.3rem;
 }
 </style>
